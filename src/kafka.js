@@ -22,3 +22,5 @@ client.createTopics(topicsToCreate, (error, result) => {
 exports.consumer = new kafka.Consumer(client, [{ topic: PENDING_TOPIC }], {
   autoCommit: true,
 });
+
+exports.producer = new kafka.Producer(client);
