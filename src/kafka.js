@@ -1,5 +1,5 @@
 const kafka = require('kafka-node');
-const { PENDING_TOPIC } = require('./constants');
+const { PENDING_TOPIC, STATUS_TOPIC } = require('./constants');
 
 require('dotenv').config();
 
@@ -12,9 +12,15 @@ const topicsToCreate = [
     partitions: 1,
     replicationFactor: 1,
   },
+  {
+    topic: STATUS_TOPIC,
+    partitions: 1,
+    replicationFactor: 1,
+  },
 ];
 
 client.createTopics(topicsToCreate, (error, result) => {
+  console.log('-----------');
   console.error(error);
   console.log(result);
 });

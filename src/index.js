@@ -2,19 +2,20 @@ const { STATUS_TOPIC } = require('./constants');
 const { consumer, producer } = require('./kafka');
 const { approveCredit } = require('./providers/approve-credit');
 
-consumer.on('message', (message) => {
+consumer.on('message', async (message) => {
   if (message) {
     const customer = JSON.parse(message.value);
-    console.log(customer.name);
-    console.log(customer.cpf);
 
-    const response = approveCredit(message);
+    const response = await approveCredit({
+      name: customer.name,
+      cpf: customer.cpf,
+    });
 
     producer.send(
       [
         {
           topic: STATUS_TOPIC,
-          messages: `{ "name": "${message.name}", "cpf": "${message.cpf}", "status": ${response.status} }`,
+          messages: `{ "name": "${customer.name}", "cpf": "${customer.cpf}", "status": "${response.status}" }`,
         },
       ],
       (error, data) => {
